@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maxlware Links - Créateur de Liens Dynamiques</title>
+
+    <meta name="description" content="Official website of Maxlware." />
+
+    <meta property="og:title" content="Maxlware - links">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://links.maxlware.fr/">
+    <meta property="og:description" content="Créateur de lien dynamique">
+    <meta property="og:site_name" content="Maxlware">
+    <meta property="og:locale" content="fr_FR">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Maxlware - Links">
+    <meta name="twitter:description" content="Créateurs de lien dynamique">
+    
+    <link rel="canonical" href="https://links.maxlware.fr/">
+    <link rel="stylesheet" href="/static/styles.css">
+
+</head>
+<body>
+    <div class="hero">
+        <div class="terminal-effect"></div>
+        <div class="hero-content">
+            <div class="ascii-art">
+M   M  AAAAA  X   X  L      W   W  AAAAA  RRRR   EEEEE
+MM MM  A   A   X X   L      W   W  A   A  R   R  E
+M M M  AAAAA    X    L      W W W  AAAAA  RRRR   EEE
+M   M  A   A   X X   L      WW WW  A   A  R  R   E
+M   M  A   A  X   X  LLLLL  W   W  A   A  R   R  EEEEE
+<iframe src="https://statuts.maxlware.fr/badge?theme=dark" width="250" height="30" frameborder="0" scrolling="no" style="color-scheme: normal"></iframe>
+            </div>
+            <h1 class="title">Maxlware - Links</h1>
+            <p class="subtitle">Créez des liens dynamiques valables 2 semaines</p>
+            
+            <div class="link-form">
+                <div class="form-group">
+                    <label class="form-label" for="url-input">URL à raccourcir :</label>
+                    <input type="url"  id="url-input" class="form-input" placeholder="https://example.com" required>
+                </div>
+                <button id="generate-btn" onclick="generate_link()"   class="btn">Générer le lien</button>
+                
+                <div class="result-container" id="result-container">
+                    <h3 class="result-title">Votre lien dynamique :</h3>
+                    <p class="generated-link" id="generated-link"></p>
+                    <div class="success-message" id="success-message">Lien copié avec succès!</div>
+                </div>
+                
+                <p class="info-text">Ce lien sera valable pendant 2 semaines à partir de maintenant.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      function generate_link() {
+          const urlInput = document.getElementById('url-input');
+          const resultContainer = document.getElementById('result-container');
+          const generatedLink = document.getElementById('generated-link');
+          const copyBtn = document.getElementById('copy-btn');
+          const successMessage = document.getElementById('success-message');
+
+          const url = urlInput.value.trim();
+          if (!url) {
+              alert('Veuillez entrer une URL valide.');
+              return;
+          }
+
+          fetch(`/generate_link/${url}`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ url: url })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.short_link) {
+                  generatedLink.textContent = data.short_link;
+                  resultContainer.style.display = 'block';
+                  successMessage.style.display = 'none';
+              } else {
+                  alert('Erreur lors de la génération du lien.');
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert('Erreur lors de la génération du lien.');
+          });
+      }
+
+    </script>
+</body>
+</html>
